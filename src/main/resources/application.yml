@@ -11,7 +11,10 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "52.45.19.226"  #  "http://bucket-s3.com"
+            allowedOrigins:
+            - "http://localhost:5173"  #React en local 
+            - "https://staging.d2p4vderfo1qel.amplifyapp.com" # Frontend en Amplify (HTTPS)
+            - "http://pasteleriamilsabores-s3.s3-website-us-east-1.amazonaws.com" # Frontend en S3 (HTTP)
             allowedMethods:
               - GET
               - POST
