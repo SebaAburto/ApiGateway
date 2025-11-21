@@ -11,14 +11,14 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "*"  #  "http://bucket-s3.com"
+            allowedOrigins: "52.45.19.226"  #  "http://bucket-s3.com"
             allowedMethods:
               - GET
               - POST
               - PUT
               - DELETE
               - OPTIONS
-            allowedHeaders: "*"
+            allowedHeaders: "52.45.19.226"
 
       # --- 2. RUTAS (El Mapa de Tráfico) ---
       routes:
