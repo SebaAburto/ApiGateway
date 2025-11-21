@@ -1,0 +1,68 @@
+server:
+  port: 80  # Puerto estándar para HTTP
+
+spring:
+  application:
+    name: api-gateway
+  
+  cloud:
+    gateway:
+      # --- 1. CONFIGURACIÓN CORS GLOBAL---
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"  #  "http://bucket-s3.com"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+
+      # --- 2. RUTAS (El Mapa de Tráfico) ---
+      routes:
+        # RUTA A: Microservicio de Clientes (Auth + Clientes)
+        - id: ms-cliente
+          uri: http://localhost:8080
+          predicates:
+            # Captura tanto el login (/auth) como la gestión de clientes (/api/v1/clientes)
+            - Path=/auth/**, /api/v1/clientes/**
+
+        # RUTA B: Microservicio de Ventas (Carrito + Ventas)
+        - id: ms-ventas
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/ventas/**, /api/v1/carrito/**
+        
+        # RUTA C: Microservicio de productos (Producto + Inventario)
+        - id: ms-ventas
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/ventas/**, /api/v1/Inventario/**
+
+        # RUTA C: Swagger UI (Para ver la doc de todos)
+        # Esto redirige las peticiones de documentación de Clientes
+        - id: openapi-clientes
+          uri: http://localhost:8080
+          predicates:
+            - Path=/v3/api-docs/clientes
+          filters:
+            - RewritePath=/v3/api-docs/clientes, /v3/api-docs
+
+        # Esto redirige las peticiones de documentación de Ventas
+        - id: openapi-ventas
+          uri: http://localhost:8081
+          predicates:
+            - Path=/v3/api-docs/ventas
+          filters:
+            - RewritePath=/v3/api-docs/ventas, /v3/api-docs
+
+# --- 3. CONFIGURACIÓN SWAGGER UI (El menú desplegable) ---
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Microservicio Clientes
+        url: /v3/api-docs/clientes
+      - name: Microservicio Ventas
+        url: /v3/api-docs/ventas
