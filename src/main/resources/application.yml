@@ -24,39 +24,48 @@ spring:
       routes:
         # RUTA A: Microservicio de Clientes (Auth + Clientes)
         - id: ms-cliente
-          uri: http://localhost:8080
+          uri: http://localhost:8083
           predicates:
             # Captura tanto el login (/auth) como la gestión de clientes (/api/v1/clientes)
             - Path=/auth/**, /api/v1/clientes/**
 
         # RUTA B: Microservicio de Ventas (Carrito + Ventas)
-        - id: ms-ventas
-          uri: http://localhost:8081
+        - id: ms-carrito
+          uri: http://localhost:8082
           predicates:
             - Path=/api/v1/ventas/**, /api/v1/carrito/**
         
         # RUTA C: Microservicio de productos (Producto + Inventario)
-        - id: ms-ventas
-          uri: http://localhost:8083
+        - id: ms-productos
+          uri: http://localhost:8081
           predicates:
             - Path=/api/v1/ventas/**, /api/v1/Inventario/**
 
         # RUTA C: Swagger UI (Para ver la doc de todos)
         # Esto redirige las peticiones de documentación de Clientes
         - id: openapi-clientes
-          uri: http://localhost:8080
+          uri: http://localhost:8083
           predicates:
             - Path=/v3/api-docs/clientes
           filters:
             - RewritePath=/v3/api-docs/clientes, /v3/api-docs
 
         # Esto redirige las peticiones de documentación de Ventas
-        - id: openapi-ventas
+        - id: openapi-carrito
+          uri: http://localhost:8082
+          predicates:
+            - Path=/v3/api-docs/carrito
+          filters:
+            - RewritePath=/v3/api-docs/carrito, /v3/api-docs
+
+        - id: openapi-productos
           uri: http://localhost:8081
           predicates:
-            - Path=/v3/api-docs/ventas
+            - Path=/v3/api-docs/productos
           filters:
-            - RewritePath=/v3/api-docs/ventas, /v3/api-docs
+            - RewritePath=/v3/api-docs/productos, /v3/api-docs
+
+
 
 # --- 3. CONFIGURACIÓN SWAGGER UI (El menú desplegable) ---
 springdoc:
